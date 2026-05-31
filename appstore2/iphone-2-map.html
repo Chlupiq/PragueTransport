@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1290px; height:2796px; overflow:hidden; background:#060d12; font-family:-apple-system,'Helvetica Neue',sans-serif; -webkit-font-smoothing:antialiased; position:relative; }
+  .bg { position:absolute; inset:0; overflow:hidden; }
+  .orb { position:absolute; border-radius:50%; filter:blur(150px); }
+  .o1 { width:800px; height:800px; background:#0066ff; opacity:0.2; top:-100px; right:-150px; }
+  .o2 { width:700px; height:700px; background:#00c6ff; opacity:0.12; top:600px; left:-100px; }
+  .o3 { width:500px; height:500px; background:#0040aa; opacity:0.18; bottom:300px; right:50px; }
+  .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(0,120,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,120,255,0.04) 1px,transparent 1px); background-size:80px 80px; }
+  .lines { position:absolute; inset:0; overflow:hidden; }
+  .line { position:absolute; height:1px; background:linear-gradient(90deg,transparent,rgba(0,160,255,0.2),transparent); }
+  .l1 { width:800px; top:38%; left:10%; transform:rotate(-15deg); }
+  .l2 { width:600px; top:55%; right:5%; transform:rotate(10deg); }
+  .l3 { width:700px; top:70%; left:20%; transform:rotate(-8deg); }
+  .content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; height:100%; }
+  .badge { margin-top:130px; display:inline-flex; align-items:center; gap:12px; background:rgba(0,122,255,0.15); border:1px solid rgba(0,122,255,0.35); padding:12px 30px; border-radius:100px; font-size:26px; font-weight:700; letter-spacing:2px; color:#60b0ff; text-transform:uppercase; }
+  .badge-dot { width:10px; height:10px; background:#007AFF; border-radius:50%; }
+  .headline { margin-top:50px; text-align:center; font-size:128px; font-weight:900; line-height:1.0; letter-spacing:-5px; color:#fff; max-width:1100px; }
+  .headline em { font-style:normal; background:linear-gradient(135deg,#60b0ff 0%,#007AFF 50%,#00c6ff 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .sub { margin-top:38px; font-size:40px; font-weight:400; color:rgba(255,255,255,0.65); text-align:center; max-width:880px; line-height:1.5; }
+  .pills { margin-top:58px; display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+  .pill { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); border-radius:100px; padding:18px 36px; font-size:28px; font-weight:600; color:rgba(255,255,255,0.85); display:flex; align-items:center; gap:12px; }
+  .pill-icon { font-size:30px; }
+  .phone-wrap { margin-top:70px; flex:1; display:flex; align-items:flex-end; justify-content:center; width:100%; position:relative; }
+  .phone { position:relative; width:600px; }
+  .phone-frame { background:#0f0f0f; border-radius:90px; padding:22px; border:2px solid rgba(255,255,255,0.12); box-shadow:0 0 0 1px rgba(255,255,255,0.04),0 40px 120px rgba(0,122,255,0.2),0 80px 200px rgba(0,0,0,0.9); }
+  .phone-screen { border-radius:70px; overflow:hidden; aspect-ratio:9/19.5; background:#000; }
+  .phone-screen img { width:100%; height:100%; object-fit:cover; display:block; }
+  .phone-island { position:absolute; top:30px; left:50%; transform:translateX(-50%); width:175px; height:44px; background:#000; border-radius:28px; z-index:5; }
+  .phone-glow { position:absolute; bottom:-40px; left:50%; transform:translateX(-50%); width:600px; height:180px; background:radial-gradient(ellipse,rgba(0,122,255,0.3) 0%,transparent 70%); }
+</style>
+</head>
+<body>
+  <div class="bg"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grid"></div><div class="lines"><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div></div></div>
+  <div class="content">
+    <div class="badge"><span class="badge-dot"></span>Interaktivní mapa<span class="badge-dot"></span></div>
+    <div class="headline">Praha<br>v <em>pohybu.</em></div>
+    <div class="sub">Vozidla na mapě v reálném čase.<br>Metro, tramvaj, bus, vlak — vše naráz.</div>
+    <div class="pills">
+      <div class="pill"><span class="pill-icon">🚇</span>Metro A B C</div>
+      <div class="pill"><span class="pill-icon">🚋</span>Tramvaj</div>
+      <div class="pill"><span class="pill-icon">🚌</span>Autobus</div>
+      <div class="pill"><span class="pill-icon">🚂</span>Vlak</div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-frame">
+          <div class="phone-island"></div>
+          <div class="phone-screen"><img src="../src/iphone_home2.png"/></div>
+        </div>
+        <div class="phone-glow"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

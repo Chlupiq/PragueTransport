@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1290px; height:2796px; overflow:hidden;
+    background: radial-gradient(ellipse 120% 80% at 50% 0%, #2d0a3e 0%, #140820 40%, #080510 100%);
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* Subtle top glow */
+  .top-glow { position:absolute; top:-200px; left:50%; transform:translateX(-50%); width:900px; height:600px; background:radial-gradient(ellipse, rgba(180,60,255,0.25) 0%, transparent 70%); pointer-events:none; }
+
+  .badge {
+    margin-top: 100px; z-index:2;
+    display:inline-flex; align-items:center; gap:10px;
+    background: rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);
+    padding:14px 36px; border-radius:100px;
+    font-size:28px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,0.75); text-transform:uppercase;
+  }
+
+  .headline {
+    margin-top: 52px; z-index:2;
+    text-align:center; font-size:134px; font-weight:900;
+    line-height:1.02; letter-spacing:-4px;
+    color:#ffffff; max-width:1100px;
+  }
+  .headline .accent { color: #c084fc; }
+
+  .sub {
+    margin-top: 32px; z-index:2;
+    font-size:38px; font-weight:400;
+    color:rgba(255,255,255,0.5); text-align:center; max-width:860px; line-height:1.5;
+  }
+
+  /* Phone */
+  .phone-section { margin-top:72px; z-index:2; position:relative; display:flex; justify-content:center; align-items:flex-end; flex:1; width:100%; }
+  .phone-outer {
+    width:596px; position:relative;
+    background: linear-gradient(160deg, #2e2e2e 0%, #141414 100%);
+    border-radius:76px; padding:4px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12), 0 60px 140px rgba(0,0,0,0.9), 0 0 80px rgba(180,60,255,0.12);
+  }
+  .phone-inner { background:#0a0a0a; border-radius:73px; padding:16px; }
+  .phone-screen { border-radius:58px; overflow:hidden; aspect-ratio:9/19.5; background:#000; position:relative; }
+  .phone-screen img { width:100%; height:100%; object-fit:cover; display:block; }
+  .phone-island { position:absolute; top:18px; left:50%; transform:translateX(-50%); width:155px; height:38px; background:#000; border-radius:24px; z-index:5; }
+  /* Buttons */
+  .btn-right { position:absolute; right:-5px; top:26%; width:5px; height:100px; background:linear-gradient(180deg,#2a2a2a,#1a1a1a); border-radius:0 3px 3px 0; }
+  .btn-left-1 { position:absolute; left:-5px; top:18%; width:5px; height:44px; background:linear-gradient(180deg,#2a2a2a,#1a1a1a); border-radius:3px 0 0 3px; }
+  .btn-left-2 { position:absolute; left:-5px; top:26%; width:5px; height:66px; background:linear-gradient(180deg,#2a2a2a,#1a1a1a); border-radius:3px 0 0 3px; }
+  .btn-left-3 { position:absolute; left:-5px; top:36%; width:5px; height:66px; background:linear-gradient(180deg,#2a2a2a,#1a1a1a); border-radius:3px 0 0 3px; }
+
+  .features {
+    position:absolute; bottom:60px; left:50%; transform:translateX(-50%);
+    display:flex; gap:20px; align-items:center; white-space:nowrap; z-index:2;
+  }
+  .feat { font-size:28px; font-weight:500; color:rgba(255,255,255,0.45); }
+  .feat-dot { width:5px; height:5px; background:rgba(255,255,255,0.3); border-radius:50%; }
+</style>
+</head>
+<body>
+  <div class="top-glow"></div>
+  <div class="badge">MOJE MHD PRAHA</div>
+  <div class="headline">Žádná<br>překvapení<br>na <span class="accent">zastávce.</span></div>
+  <div class="sub">Živé odjezdy ze zastávek v okolí,<br>aktualizované každých 10 sekund.</div>
+  <div class="phone-section">
+    <div class="phone-outer">
+      <div class="btn-right"></div>
+      <div class="btn-left-1"></div>
+      <div class="btn-left-2"></div>
+      <div class="btn-left-3"></div>
+      <div class="phone-inner">
+        <div class="phone-screen">
+          <div class="phone-island"></div>
+          <img src="../src/iphone_home2.png"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="features">
+    <span class="feat">Živé odjezdy každých 10s</span>
+    <span class="feat-dot"></span>
+    <span class="feat">5 000+ zastávek PID</span>
+  </div>
+</body>
+</html>

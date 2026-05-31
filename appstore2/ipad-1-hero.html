@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:2048px; height:2732px; overflow:hidden; background:#08080f; font-family:-apple-system,'Helvetica Neue',sans-serif; -webkit-font-smoothing:antialiased; position:relative; }
+  .bg { position:absolute; inset:0; overflow:hidden; }
+  .orb { position:absolute; border-radius:50%; filter:blur(200px); }
+  .o1 { width:1200px; height:1200px; background:#E8001D; opacity:0.18; top:-300px; left:-200px; }
+  .o2 { width:1000px; height:1000px; background:#007AFF; opacity:0.14; bottom:-200px; right:-200px; }
+  .o3 { width:800px; height:800px; background:#7c3aed; opacity:0.12; top:50%; right:10%; }
+  .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px); background-size:100px 100px; }
+  .content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; height:100%; }
+
+  .badge { margin-top:160px; display:inline-flex; align-items:center; gap:14px; background:rgba(232,0,29,0.12); border:1px solid rgba(232,0,29,0.3); padding:16px 40px; border-radius:100px; font-size:36px; font-weight:700; letter-spacing:2px; color:#ff8090; text-transform:uppercase; }
+  .badge-dot { width:14px; height:14px; background:#E8001D; border-radius:50%; }
+
+  .headline { margin-top:64px; text-align:center; font-size:180px; font-weight:900; line-height:1.0; letter-spacing:-7px; color:#fff; max-width:1700px; }
+  .headline em { font-style:normal; background:linear-gradient(135deg,#ff6b7a 0%,#E8001D 40%,#007AFF 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .sub { margin-top:48px; font-size:56px; font-weight:400; color:rgba(255,255,255,0.65); text-align:center; max-width:1300px; line-height:1.5; }
+
+  /* Feature chips */
+  .chips { margin-top:72px; display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
+  .chip { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.13); border-radius:100px; padding:22px 48px; font-size:36px; font-weight:600; color:rgba(255,255,255,0.85); display:flex; align-items:center; gap:16px; }
+  .chip-icon { font-size:38px; }
+
+  /* iPad device */
+  .ipad-wrap { margin-top:80px; flex:1; display:flex; align-items:flex-end; justify-content:center; width:100%; position:relative; }
+  .ipad { position:relative; width:1200px; }
+  .ipad-frame { background:#0f0f0f; border-radius:48px; padding:24px 20px; border:2px solid rgba(255,255,255,0.12); box-shadow:0 60px 180px rgba(232,0,29,0.12),0 40px 120px rgba(0,122,255,0.1),0 100px 300px rgba(0,0,0,0.95); }
+  .ipad-screen { border-radius:30px; overflow:hidden; aspect-ratio:3/4; background:#000; }
+  .ipad-screen img { width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+  .ipad-home { width:120px; height:6px; background:rgba(255,255,255,0.18); border-radius:3px; margin:16px auto 0; }
+  .ipad-glow { position:absolute; bottom:-60px; left:50%; transform:translateX(-50%); width:1200px; height:300px; background:radial-gradient(ellipse,rgba(232,0,29,0.15) 0%,rgba(0,122,255,0.1) 50%,transparent 70%); }
+</style>
+</head>
+<body>
+  <div class="bg"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grid"></div></div>
+  <div class="content">
+    <div class="badge"><span class="badge-dot"></span>Moje MHD Praha<span class="badge-dot"></span></div>
+    <div class="headline">Pražská MHD<br>v <em>reálném čase.</em></div>
+    <div class="sub">Odjezdy, mapa vozidel, plánování cesty<br>a SMS jízdenky — vše na jednom místě.</div>
+    <div class="chips">
+      <div class="chip"><span class="chip-icon">⚡</span>Živé odjezdy</div>
+      <div class="chip"><span class="chip-icon">🗺️</span>Mapa vozidel</div>
+      <div class="chip"><span class="chip-icon">🧭</span>Plánování</div>
+      <div class="chip"><span class="chip-icon">⌚</span>Apple Watch</div>
+    </div>
+    <div class="ipad-wrap">
+      <div class="ipad">
+        <div class="ipad-frame">
+          <div class="ipad-screen"><img src="../src/ipad_home.png"/></div>
+          <div class="ipad-home"></div>
+        </div>
+        <div class="ipad-glow"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
