@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1290"/>
+<title>Screenshot 3 – Live Activity & Dynamic Island</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1290px; height:2796px;
+    background: linear-gradient(160deg, #0a0010 0%, #140018 40%, #0a0820 100%);
+    font-family: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
+    overflow:hidden; position:relative;
+  }
+  .bg1 { position:absolute;width:900px;height:900px;
+    background:radial-gradient(circle,rgba(180,0,255,0.18) 0%,transparent 70%);
+    top:-200px;left:50%;transform:translateX(-50%);pointer-events:none; }
+  .bg2 { position:absolute;width:700px;height:700px;
+    background:radial-gradient(circle,rgba(232,0,29,0.15) 0%,transparent 70%);
+    bottom:0;right:-100px;pointer-events:none; }
+
+  .header { position:absolute;top:110px;left:0;right:0;text-align:center;z-index:10; }
+
+  .badge {
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(160,0,255,0.12);border:1.5px solid rgba(160,0,255,0.35);
+    border-radius:100px;padding:10px 28px;font-size:26px;font-weight:700;
+    color:#c060ff;letter-spacing:0.05em;margin-bottom:36px;
+  }
+  .live-dot { width:10px;height:10px;background:#ff4444;border-radius:50%;
+    box-shadow:0 0 8px rgba(255,68,68,0.8);
+    animation: livepulse 1s ease-in-out infinite; }
+  @keyframes livepulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+  h1 { font-size:105px;font-weight:900;line-height:1.0;letter-spacing:-0.04em;color:white;margin-bottom:28px; }
+  h1 span {
+    background:linear-gradient(135deg,#a000ff 0%,#ff00aa 50%,#ff4466 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .sub { font-size:38px;color:rgba(255,255,255,0.5);font-weight:400;line-height:1.4; }
+
+  /* ---- PHONE ---- */
+  .phone-wrapper { position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:640px; }
+  .phone {
+    background:#0a0a12;border-radius:72px;
+    border:3px solid rgba(255,255,255,0.15);overflow:hidden;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.9),0 60px 120px rgba(0,0,0,0.85),
+               0 0 100px rgba(160,0,255,0.12);
+    position:relative;
+  }
+
+  /* ---- LOCK SCREEN ---- */
+  .lockscreen {
+    background:linear-gradient(160deg,#0d0018 0%,#180028 100%);
+    min-height:1260px;
+    position:relative;
+    padding:0;
+  }
+
+  .dynamic-island {
+    position:absolute;top:16px;left:50%;transform:translateX(-50%);
+    z-index:50;
+    /* Expanded state */
+    width:380px;height:110px;
+    background:#000;border-radius:40px;
+    display:flex;align-items:center;
+    padding:0 20px;
+    gap:14px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.8);
+    border:1px solid rgba(255,255,255,0.1);
+  }
+
+  .di-line-badge {
+    width:56px;height:56px;border-radius:16px;
+    background:linear-gradient(135deg,#C8102E,#ff2040);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;font-weight:900;color:white;flex-shrink:0;
+  }
+
+  .di-info { flex:1;min-width:0; }
+  .di-title { font-size:16px;font-weight:700;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .di-sub { font-size:13px;color:rgba(255,255,255,0.5);margin-top:2px; }
+
+  .di-countdown {
+    text-align:right;flex-shrink:0;
+  }
+  .di-count-num { font-size:28px;font-weight:900;color:white;line-height:1;letter-spacing:-1px; }
+  .di-count-unit { font-size:13px;color:rgba(255,255,255,0.4); }
+
+  /* Lock screen content */
+  .ls-time { text-align:center;padding:140px 0 12px;font-size:90px;font-weight:200;color:white;letter-spacing:-4px;line-height:1; }
+  .ls-date { text-align:center;font-size:24px;color:rgba(255,255,255,0.6);margin-bottom:48px; }
+
+  /* Live Activity on lock screen */
+  .la-widget {
+    margin:0 24px 24px;
+    background:rgba(20,10,40,0.85);
+    backdrop-filter:blur(40px);
+    -webkit-backdrop-filter:blur(40px);
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,0.1);
+    overflow:hidden;
+    box-shadow:0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .la-top {
+    display:flex;align-items:center;gap:14px;
+    padding:18px 20px 16px;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .la-app-icon {
+    width:44px;height:44px;border-radius:12px;
+    background:linear-gradient(135deg,#E8001D,#ff6b35);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+  }
+  .la-app-name { font-size:15px;font-weight:700;color:white; }
+  .la-live-tag {
+    margin-left:auto;display:flex;align-items:center;gap:6px;
+    background:rgba(255,60,60,0.2);border:1px solid rgba(255,60,60,0.35);
+    border-radius:50px;padding:4px 12px;font-size:13px;font-weight:700;color:#ff6060;
+  }
+
+  .la-main { padding:20px; }
+
+  .la-header-row { display:flex;align-items:center;gap:12px;margin-bottom:16px; }
+  .la-line-b {
+    width:52px;height:52px;border-radius:14px;
+    background:linear-gradient(135deg,#C8102E,#ff2040);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;font-weight:900;color:white;
+  }
+  .la-route { flex:1; }
+  .la-route-name { font-size:18px;font-weight:800;color:white; }
+  .la-route-sub { font-size:15px;color:rgba(255,255,255,0.45);margin-top:2px; }
+  .la-big-num {
+    font-size:52px;font-weight:900;color:white;line-height:1;
+    letter-spacing:-2px;text-align:right;
+  }
+  .la-big-unit { font-size:16px;color:rgba(255,255,255,0.4);text-align:right;margin-top:2px; }
+
+  /* Progress */
+  .la-progress-wrap { margin-bottom:16px; }
+  .la-prog-labels { display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px; }
+  .la-prog-from { color:rgba(255,255,255,0.5); }
+  .la-prog-to { color:rgba(255,255,255,0.5); }
+  .la-prog-bar { height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden; }
+  .la-prog-fill { height:100%;width:38%;background:linear-gradient(90deg,#E8001D,#ff6b35);border-radius:3px; }
+
+  /* Stop list */
+  .la-stops-row { display:flex;gap:8px;flex-wrap:wrap; }
+  .la-stop-chip {
+    padding:6px 14px;border-radius:50px;font-size:14px;font-weight:600;
+  }
+  .la-stop-chip.passed { background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.3); }
+  .la-stop-chip.next { background:rgba(232,0,29,0.2);color:#ff6060;border:1px solid rgba(232,0,29,0.35); }
+  .la-stop-chip.upcoming { background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.4); }
+
+  /* Notification preview */
+  .notif-preview {
+    margin:0 24px;
+    background:rgba(30,20,50,0.85);
+    backdrop-filter:blur(30px);
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.08);
+    padding:16px 18px;
+    display:flex;align-items:center;gap:14px;
+  }
+  .notif-icon { font-size:32px; }
+  .notif-text { flex:1; }
+  .notif-title { font-size:16px;font-weight:700;color:white; }
+  .notif-body { font-size:14px;color:rgba(255,255,255,0.5);margin-top:2px; }
+  .notif-time { font-size:14px;color:rgba(255,255,255,0.35); }
+
+  /* Home indicator */
+  .home-ind { width:140px;height:6px;background:rgba(255,255,255,0.25);border-radius:3px;margin:20px auto 12px; }
+</style>
+</head>
+<body>
+<div class="bg1"></div>
+<div class="bg2"></div>
+
+<div class="header">
+  <div class="badge"><div class="live-dot"></div>DYNAMIC ISLAND · LIVE ACTIVITY</div>
+  <h1>Spoj sledujete<br/><span>odkudkoliv</span></h1>
+  <div class="sub">Živý odpočet na zámkové<br/>obrazovce i Dynamic Islandu</div>
+</div>
+
+<div class="phone-wrapper">
+  <div class="phone">
+    <!-- DYNAMIC ISLAND — expanded -->
+    <div class="dynamic-island">
+      <div class="di-line-badge">22</div>
+      <div class="di-info">
+        <div class="di-title">Tram 22 → Bílá Hora</div>
+        <div class="di-sub">📍 Malostranská</div>
+      </div>
+      <div class="di-countdown">
+        <div class="di-count-num">2:47</div>
+        <div class="di-count-unit">do odjezdu</div>
+      </div>
+    </div>
+
+    <div class="lockscreen">
+      <!-- Clock -->
+      <div class="ls-time">9:41</div>
+      <div class="ls-date">Úterý 26. května</div>
+
+      <!-- Live Activity widget -->
+      <div class="la-widget">
+        <div class="la-top">
+          <div class="la-app-icon">🚇</div>
+          <div>
+            <div class="la-app-name">Moje MHD Praha</div>
+          </div>
+          <div class="la-live-tag">
+            <div class="live-dot" style="width:8px;height:8px;"></div>
+            ŽIVĚ
+          </div>
+        </div>
+        <div class="la-main">
+          <div class="la-header-row">
+            <div class="la-line-b">22</div>
+            <div class="la-route">
+              <div class="la-route-name">Tramvaj 22</div>
+              <div class="la-route-sub">→ Bílá Hora</div>
+            </div>
+            <div>
+              <div class="la-big-num">2:47</div>
+              <div class="la-big-unit">do odjezdu</div>
+            </div>
+          </div>
+          <div class="la-progress-wrap">
+            <div class="la-prog-labels">
+              <span class="la-prog-from">📍 Malostranská</span>
+              <span class="la-prog-to">🏠 Domů</span>
+            </div>
+            <div class="la-prog-bar"><div class="la-prog-fill"></div></div>
+          </div>
+          <div class="la-stops-row">
+            <div class="la-stop-chip passed">Národní divadlo</div>
+            <div class="la-stop-chip passed">Újezd</div>
+            <div class="la-stop-chip next">⮕ Malostranská</div>
+            <div class="la-stop-chip upcoming">Chotkovy sady</div>
+            <div class="la-stop-chip upcoming">Brusnice</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <div class="notif-preview">
+        <div class="notif-icon">🔔</div>
+        <div class="notif-text">
+          <div class="notif-title">Moje MHD Praha</div>
+          <div class="notif-body">Tram 22 odjíždí za 2 minuty z Malostranské!</div>
+        </div>
+        <div class="notif-time">Nyní</div>
+      </div>
+
+      <div class="home-ind"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

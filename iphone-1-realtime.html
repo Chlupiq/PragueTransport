@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1290"/>
+<title>Screenshot 1 – Real-time odjezdy</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width: 1290px;
+    height: 2796px;
+    background: linear-gradient(160deg, #0A0A14 0%, #12001A 40%, #1A000A 100%);
+    font-family: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Background glow */
+  .bg-glow {
+    position: absolute;
+    width: 900px; height: 900px;
+    background: radial-gradient(circle, rgba(232,0,29,0.25) 0%, transparent 70%);
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .bg-glow2 {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,112,192,0.15) 0%, transparent 70%);
+    bottom: 200px; left: -100px;
+    pointer-events: none;
+  }
+
+  /* Header text */
+  .header {
+    position: absolute;
+    top: 120px;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(232,0,29,0.12);
+    border: 1.5px solid rgba(232,0,29,0.35);
+    border-radius: 100px;
+    padding: 10px 28px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ff6060;
+    letter-spacing: 0.05em;
+    margin-bottom: 36px;
+  }
+
+  .badge-dot {
+    width: 10px; height: 10px;
+    background: #ff4040;
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-size: 110px;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: white;
+    margin-bottom: 28px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, #E8001D 0%, #ff6b35 60%, #ffaa00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .sub {
+    font-size: 38px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Phone frame */
+  .phone-wrapper {
+    position: absolute;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 620px;
+  }
+
+  .phone {
+    background: #0d0d12;
+    border-radius: 70px;
+    border: 3px solid rgba(255,255,255,0.15);
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.8),
+      0 60px 120px rgba(0,0,0,0.8),
+      0 0 80px rgba(232,0,29,0.08),
+      inset 0 0 0 1px rgba(255,255,255,0.06);
+    position: relative;
+  }
+
+  /* Dynamic island */
+  .dynamic-island {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px; height: 42px;
+    background: #000;
+    border-radius: 30px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .di-live {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .di-dot {
+    width: 8px; height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Screen content */
+  .screen {
+    background: #0d0d12;
+    width: 100%;
+    min-height: 1200px;
+    position: relative;
+  }
+
+  /* Status bar */
+  .status {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 72px 36px 16px;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+  }
+
+  /* Map area */
+  .map-area {
+    height: 380px;
+    background: linear-gradient(160deg, #102010 0%, #0a180a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-road-h { position: absolute; left: 0; right: 0; background: rgba(255,255,255,0.05); }
+  .map-road-v { position: absolute; top: 0; bottom: 0; background: rgba(255,255,255,0.05); }
+
+  .m-pin {
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .m-pin.A { background: #00A651; }
+  .m-pin.B { background: #FFD700; }
+  .m-pin.C { background: #E8001D; }
+  .m-pin.T { background: #E8001D; }
+  .m-pin.Bu { background: #0070C0; }
+
+  .user-pin {
+    position: absolute;
+    background: #007AFF;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 0 0 8px rgba(0,122,255,0.2), 0 4px 16px rgba(0,122,255,0.4);
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    background: rgba(13,13,18,0.95);
+    backdrop-filter: blur(20px);
+    overflow-x: auto;
+  }
+
+  .fchip {
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .fchip.active-all { background: #E8001D; color: white; }
+  .fchip.metro { background: rgba(0,166,81,0.15); color: #00A651; border: 1.5px solid rgba(0,166,81,0.3); }
+  .fchip.tram { background: rgba(232,0,29,0.12); color: #ff6060; border: 1.5px solid rgba(232,0,29,0.25); }
+  .fchip.bus { background: rgba(0,112,192,0.12); color: #60aaff; border: 1.5px solid rgba(0,112,192,0.25); }
+
+  /* Sheet */
+  .sheet {
+    background: rgba(13,13,18,0.98);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 0 20px 24px;
+  }
+
+  .handle {
+    width: 50px; height: 5px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    margin: 12px auto 16px;
+  }
+
+  .stop-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .stop-meta {
+    font-size: 16px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+  }
+
+  /* Departure row */
+  .dep {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .badge-line {
+    min-width: 54px; height: 54px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; color: white;
+    flex-shrink: 0;
+    letter-spacing: -0.5px;
+  }
+  .bl-A { background: linear-gradient(135deg,#00A651,#00c862); }
+  .bl-C { background: linear-gradient(135deg,#E8001D,#ff2040); }
+  .bl-22 { background: linear-gradient(135deg,#C8102E,#e82048); }
+  .bl-18 { background: linear-gradient(135deg,#B80000,#d40020); }
+  .bl-bus { background: linear-gradient(135deg,#0070C0,#0090e0); }
+  .bl-B { background: linear-gradient(135deg,#E0C000,#FFD700); color: #000; }
+
+  .dep-info { flex: 1; min-width: 0; }
+  .dep-head { font-size: 19px; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dep-stop { font-size: 15px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+  .dep-right { text-align: right; flex-shrink: 0; }
+  .dep-min {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  .dep-min.now { color: #f87171; }
+  .dep-min.soon { color: #facc15; }
+  .dep-min.ok { color: #4ade80; }
+  .dep-sched { font-size: 15px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+
+  /* Bottom home indicator */
+  .home-indicator {
+    width: 140px; height: 6px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 3px;
+    margin: 16px auto 8px;
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    display: flex;
+    background: rgba(13,13,18,0.98);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 0 0;
+  }
+
+  .tab {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 4px 0 16px;
+    font-size: 13px; font-weight: 600;
+  }
+
+  .tab-icon { font-size: 24px; }
+  .tab.active .tab-label { color: #E8001D; }
+  .tab.inactive .tab-label { color: rgba(255,255,255,0.35); }
+  .tab.active .tab-icon-img { filter: none; }
+
+  /* Delay badge */
+  .delay-badge {
+    background: rgba(250,204,21,0.18);
+    border: 1px solid rgba(250,204,21,0.35);
+    color: #facc15;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-glow2"></div>
+
+<!-- Header text -->
+<div class="header">
+  <div class="badge">
+    <div class="badge-dot"></div>
+    ŽIVÁ DATA · GOLEMIO API
+  </div>
+  <h1>Odjezdy<br/><span>v reálném čase</span></h1>
+  <div class="sub">Metro · Tramvaj · Bus · Vlak</div>
+</div>
+
+<!-- Phone -->
+<div class="phone-wrapper">
+  <div class="phone">
+    <div class="dynamic-island">
+      <div class="di-live">
+        <div class="di-dot"></div>
+        22 · 2:47
+      </div>
+    </div>
+    <div class="screen">
+      <!-- Status -->
+      <div class="status">
+        <span>9:41</span>
+        <span style="display:flex;gap:6px;align-items:center;font-size:15px;">
+          <span>●●●</span><span>WiFi</span><span>▐▌</span>
+        </span>
+      </div>
+
+      <!-- Map -->
+      <div class="map-area">
+        <div class="map-road-h" style="top:28%;height:10px;"></div>
+        <div class="map-road-h" style="top:60%;height:7px;"></div>
+        <div class="map-road-v" style="left:35%;width:8px;"></div>
+        <div class="map-road-v" style="left:68%;width:6px;"></div>
+        <!-- Metro line A (green) -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 60 200 Q 200 120 340 150 Q 460 180 550 140" stroke="#00A651" stroke-width="4" fill="none" opacity="0.5" stroke-dasharray="8,4"/>
+          <path d="M 60 240 Q 250 280 400 260 Q 500 245 560 260" stroke="#E8001D" stroke-width="4" fill="none" opacity="0.4" stroke-dasharray="8,4"/>
+        </svg>
+        <div class="m-pin A" style="width:20px;height:20px;top:32%;left:28%;"></div>
+        <div class="m-pin C" style="width:20px;height:20px;top:55%;left:52%;"></div>
+        <div class="m-pin T" style="width:16px;height:16px;top:22%;left:58%;"></div>
+        <div class="m-pin Bu" style="width:16px;height:16px;top:62%;left:22%;"></div>
+        <div class="m-pin A" style="width:18px;height:18px;top:42%;left:72%;"></div>
+        <div class="m-pin B" style="width:18px;height:18px;top:18%;left:42%;"></div>
+        <div class="user-pin" style="width:22px;height:22px;top:40%;left:44%;transform:translate(-50%,-50%);"></div>
+        <!-- Stop label -->
+        <div style="position:absolute;top:34%;left:32%;background:rgba(0,0,0,0.7);color:white;padding:3px 8px;border-radius:6px;font-size:13px;font-weight:600;white-space:nowrap;">Malostranská</div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="fchip active-all">Vše</div>
+        <div class="fchip metro">🚇 Metro</div>
+        <div class="fchip tram">🚋 Tram</div>
+        <div class="fchip bus">🚌 Bus</div>
+      </div>
+
+      <!-- Sheet -->
+      <div class="sheet">
+        <div class="handle"></div>
+        <div class="stop-title">Malostranská</div>
+        <div class="stop-meta">Nejbližší zastávky · 120 m od vás</div>
+
+        <div class="dep">
+          <div class="badge-line bl-A">A</div>
+          <div class="dep-info">
+            <div class="dep-head">Nemocnice Motol</div>
+            <div class="dep-stop">Malostranská · Metro A</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-min now">2′</div>
+            <div class="dep-sched">9:43</div>
+          </div>
+        </div>
+
+        <div class="dep">
+          <div class="badge-line bl-22">22</div>
+          <div class="dep-info">
+            <div class="dep-head">Bílá Hora
+              <span class="delay-badge">+2 min</span>
+            </div>
+            <div class="dep-stop">Malostranská · Tramvaj</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-min soon">5′</div>
+            <div class="dep-sched">9:45</div>
+          </div>
+        </div>
+
+        <div class="dep">
+          <div class="badge-line bl-C">C</div>
+          <div class="dep-info">
+            <div class="dep-head">Háje</div>
+            <div class="dep-stop">Muzeum · Metro C</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-min ok">7′</div>
+            <div class="dep-sched">9:48</div>
+          </div>
+        </div>
+
+        <div class="dep">
+          <div class="badge-line bl-18">18</div>
+          <div class="dep-info">
+            <div class="dep-head">Nádraží Holešovice</div>
+            <div class="dep-stop">Malostranská · Tramvaj</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-min ok">10′</div>
+            <div class="dep-sched">9:51</div>
+          </div>
+        </div>
+
+        <div class="dep" style="border-bottom:none;">
+          <div class="badge-line bl-bus">207</div>
+          <div class="dep-info">
+            <div class="dep-head">Dejvická</div>
+            <div class="dep-stop">Chotkovy sady · Autobus</div>
+          </div>
+          <div class="dep-right">
+            <div class="dep-min ok">13′</div>
+            <div class="dep-sched">9:54</div>
+          </div>
+        </div>
+
+        <div class="home-indicator"></div>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <div class="tab active">
+          <span class="tab-icon">🏠</span>
+          <span class="tab-label" style="color:#E8001D;font-size:13px;font-weight:700;">Domů</span>
+        </div>
+        <div class="tab inactive">
+          <span class="tab-icon">📱</span>
+          <span class="tab-label" style="color:rgba(255,255,255,0.35);font-size:13px;">SMS</span>
+        </div>
+        <div class="tab inactive">
+          <span class="tab-icon">⚙️</span>
+          <span class="tab-label" style="color:rgba(255,255,255,0.35);font-size:13px;">Nastavení</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

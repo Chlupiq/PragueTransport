@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1290"/>
+<title>Screenshot 2 – Plánování tras</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width: 1290px; height: 2796px;
+    background: linear-gradient(160deg, #000814 0%, #001428 50%, #000a20 100%);
+    font-family: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
+    overflow: hidden; position: relative;
+  }
+  .bg-glow1 { position:absolute; width:800px;height:800px;
+    background:radial-gradient(circle,rgba(0,112,192,0.25) 0%,transparent 70%);
+    top:-150px;left:50%;transform:translateX(-50%); pointer-events:none; }
+  .bg-glow2 { position:absolute; width:600px;height:600px;
+    background:radial-gradient(circle,rgba(0,166,81,0.15) 0%,transparent 70%);
+    bottom:100px;right:-100px; pointer-events:none; }
+
+  .header { position:absolute;top:120px;left:0;right:0;text-align:center;z-index:10; }
+
+  .badge {
+    display:inline-flex;align-items:center;gap:10px;
+    background:rgba(0,112,192,0.12);border:1.5px solid rgba(0,112,192,0.35);
+    border-radius:100px;padding:10px 28px;font-size:26px;font-weight:700;
+    color:#60aaff;letter-spacing:0.05em;margin-bottom:36px;
+  }
+  .badge-dot { width:10px;height:10px;background:#60aaff;border-radius:50%; }
+
+  h1 { font-size:108px;font-weight:900;line-height:1.0;letter-spacing:-0.04em;color:white;margin-bottom:28px; }
+  h1 span {
+    background:linear-gradient(135deg,#0070C0 0%,#00aaff 50%,#00e5ff 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .sub { font-size:38px;color:rgba(255,255,255,0.5);font-weight:400; }
+
+  .phone-wrapper { position:absolute;bottom:100px;left:50%;transform:translateX(-50%);width:620px; }
+  .phone {
+    background:#0a0a14;border-radius:70px;
+    border:3px solid rgba(255,255,255,0.15);overflow:hidden;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.8),0 60px 120px rgba(0,0,0,0.8),
+      0 0 80px rgba(0,112,192,0.1),inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .dynamic-island {
+    position:absolute;top:16px;left:50%;transform:translateX(-50%);
+    width:130px;height:40px;background:#000;border-radius:30px;z-index:30;
+  }
+  .screen { background:#0a0a14; }
+
+  .status { display:flex;justify-content:space-between;align-items:flex-end;
+    padding:72px 36px 16px;font-size:17px;font-weight:600;color:white; }
+
+  /* Nav */
+  .nav-bar {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 24px 16px;
+  }
+  .nav-title { font-size:30px;font-weight:800;color:white;letter-spacing:-0.02em; }
+  .nav-chip {
+    background:rgba(0,112,192,0.15);border:1px solid rgba(0,112,192,0.3);
+    color:#60aaff;padding:8px 18px;border-radius:50px;font-size:16px;font-weight:700;
+  }
+
+  /* Search fields */
+  .search-fields { padding:0 20px 16px; }
+  .field {
+    display:flex;align-items:center;gap:14px;
+    padding:16px 20px;border-radius:16px;margin-bottom:8px;
+  }
+  .field-from { background:rgba(255,255,255,0.06); }
+  .field-to { background:rgba(0,112,192,0.12);border:1.5px solid rgba(0,112,192,0.25); }
+  .field-icon { font-size:20px; }
+  .field-text { font-size:18px;font-weight:600; }
+  .field-from .field-text { color:rgba(255,255,255,0.5); }
+  .field-to .field-text { color:#60aaff; }
+  .field-swap {
+    display:flex;align-items:center;justify-content:center;
+    width:36px;height:36px;background:rgba(255,255,255,0.08);border-radius:50%;
+    margin:0 20px 12px auto;font-size:18px;
+  }
+
+  /* Time filter */
+  .time-filter {
+    display:flex;gap:8px;padding:0 20px 16px;
+  }
+  .time-chip {
+    padding:8px 18px;border-radius:50px;font-size:15px;font-weight:600;
+  }
+  .tc-active { background:#0070C0;color:white; }
+  .tc-off { background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.1); }
+
+  /* Journey results */
+  .journey-card {
+    margin:0 20px 12px;background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;
+    position:relative;overflow:hidden;
+  }
+  .journey-card.best {
+    background:rgba(0,112,192,0.1);border-color:rgba(0,112,192,0.25);
+  }
+  .best-tag {
+    position:absolute;top:14px;right:14px;
+    background:#0070C0;color:white;font-size:13px;font-weight:700;
+    padding:4px 12px;border-radius:50px;
+  }
+
+  .jc-row1 { display:flex;align-items:center;gap:10px;margin-bottom:14px; }
+  .jtime { font-size:26px;font-weight:900;color:white;letter-spacing:-1px; }
+  .jdot { width:5px;height:5px;background:rgba(255,255,255,0.3);border-radius:50%; }
+  .jduration { font-size:18px;font-weight:600;color:#4ade80; }
+  .jtransfers { font-size:16px;color:rgba(255,255,255,0.4); }
+
+  /* Segments */
+  .segments { display:flex;align-items:center;gap:6px;flex-wrap:wrap; }
+  .seg {
+    display:flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:10px;font-size:15px;font-weight:700;color:white;
+  }
+  .seg-arrow { font-size:14px;color:rgba(255,255,255,0.3); }
+  .seg-walk { background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:14px; }
+  .seg-a { background:#00A651; }
+  .seg-c { background:#E8001D; }
+  .seg-22 { background:#C8102E; }
+  .seg-b { background:#E0C000;color:#000; }
+  .seg-bus { background:#0070C0; }
+
+  /* Progress bar */
+  .jc-bar { height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:14px;overflow:hidden; }
+  .jc-bar-fill { height:100%;border-radius:2px; }
+
+  /* Departure times */
+  .jc-depart { display:flex;justify-content:space-between;align-items:center;margin-top:10px; }
+  .jc-dep-time { font-size:16px;color:rgba(255,255,255,0.5); }
+  .jc-dep-arr { font-size:16px;color:rgba(255,255,255,0.5); }
+  .jc-arrow { font-size:14px;color:rgba(255,255,255,0.25); }
+
+  .section-head {
+    font-size:20px;font-weight:700;color:rgba(255,255,255,0.5);
+    padding:8px 20px 12px;letter-spacing:0.05em;text-transform:uppercase;font-size:16px;
+  }
+
+  .tab-bar {
+    display:flex;background:rgba(10,10,20,0.98);
+    border-top:1px solid rgba(255,255,255,0.08);padding:12px 0 0;
+  }
+  .tab { flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0 20px; }
+  .tab-icon { font-size:24px; }
+  .home-indicator { width:140px;height:6px;background:rgba(255,255,255,0.25);border-radius:3px;margin:14px auto 6px; }
+</style>
+</head>
+<body>
+<div class="bg-glow1"></div>
+<div class="bg-glow2"></div>
+
+<div class="header">
+  <div class="badge"><div class="badge-dot"></div>CHYTRÉ PLÁNOVÁNÍ TRAS</div>
+  <h1>Kam potřebujete<br/><span>se dostat?</span></h1>
+  <div class="sub">Optimální spojení s přestupy</div>
+</div>
+
+<div class="phone-wrapper">
+  <div class="phone">
+    <div class="dynamic-island"></div>
+    <div class="screen">
+      <div class="status">
+        <span>9:41</span>
+        <span style="display:flex;gap:6px;font-size:15px;">●●● WiFi ▐▌</span>
+      </div>
+
+      <div class="nav-bar">
+        <div class="nav-title">Hledat spojení</div>
+        <div class="nav-chip">Nyní</div>
+      </div>
+
+      <!-- Search fields -->
+      <div class="search-fields">
+        <div class="field field-from">
+          <span class="field-icon">📍</span>
+          <span class="field-text">Moje poloha (Malostranská)</span>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div class="field-swap">⇅</div>
+        </div>
+        <div class="field field-to">
+          <span class="field-icon">🔍</span>
+          <span class="field-text">Náměstí Míru</span>
+        </div>
+      </div>
+
+      <!-- Time filter -->
+      <div class="time-filter">
+        <div class="time-chip tc-active">Odjezd</div>
+        <div class="time-chip tc-off">Příjezd</div>
+        <div class="time-chip tc-off" style="margin-left:auto;">⚙️ Filtry</div>
+      </div>
+
+      <div class="section-head">3 nalezená spojení</div>
+
+      <!-- Best journey -->
+      <div class="journey-card best">
+        <div class="best-tag">Nejlepší</div>
+        <div class="jc-row1">
+          <span class="jtime">9:45</span>
+          <span class="jdot"></span>
+          <span class="jduration">14 min</span>
+          <span class="jdot"></span>
+          <span class="jtransfers">1 přestup</span>
+        </div>
+        <div class="segments">
+          <div class="seg seg-a">A Muzeum</div>
+          <div class="seg-arrow">→</div>
+          <div class="seg seg-walk">🚶 2 min</div>
+          <div class="seg-arrow">→</div>
+          <div class="seg seg-22">11 N.Míru</div>
+        </div>
+        <div class="jc-bar"><div class="jc-bar-fill" style="width:55%;background:linear-gradient(90deg,#00A651,#60aaff);"></div></div>
+        <div class="jc-depart">
+          <span class="jc-dep-time">Odjezd 9:45</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-dep-arr">Příjezd 9:59</span>
+        </div>
+      </div>
+
+      <!-- Journey 2 -->
+      <div class="journey-card">
+        <div class="jc-row1">
+          <span class="jtime">9:48</span>
+          <span class="jdot"></span>
+          <span class="jduration">18 min</span>
+          <span class="jdot"></span>
+          <span class="jtransfers">Přímé</span>
+        </div>
+        <div class="segments">
+          <div class="seg seg-22">22 Bílá Hora</div>
+          <div class="seg-arrow">→</div>
+          <div class="seg seg-walk">🚶 3 min</div>
+        </div>
+        <div class="jc-bar"><div class="jc-bar-fill" style="width:40%;background:#C8102E;"></div></div>
+        <div class="jc-depart">
+          <span class="jc-dep-time">Odjezd 9:48</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-dep-arr">Příjezd 10:06</span>
+        </div>
+      </div>
+
+      <!-- Journey 3 -->
+      <div class="journey-card">
+        <div class="jc-row1">
+          <span class="jtime">9:52</span>
+          <span class="jdot"></span>
+          <span class="jduration">22 min</span>
+          <span class="jdot"></span>
+          <span class="jtransfers">2 přestupy</span>
+        </div>
+        <div class="segments">
+          <div class="seg seg-bus">207</div>
+          <div class="seg-arrow">→</div>
+          <div class="seg seg-c">C Háje</div>
+          <div class="seg-arrow">→</div>
+          <div class="seg seg-22">11</div>
+        </div>
+        <div class="jc-bar"><div class="jc-bar-fill" style="width:30%;background:linear-gradient(90deg,#0070C0,#E8001D);"></div></div>
+        <div class="jc-depart">
+          <span class="jc-dep-time">Odjezd 9:52</span>
+          <span class="jc-arrow">→</span>
+          <span class="jc-dep-arr">Příjezd 10:14</span>
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+      <div class="tab-bar">
+        <div class="tab"><span class="tab-icon">🏠</span><span style="font-size:13px;color:rgba(255,255,255,0.35);">Domů</span></div>
+        <div class="tab"><span class="tab-icon">📱</span><span style="font-size:13px;color:rgba(255,255,255,0.35);">SMS</span></div>
+        <div class="tab"><span class="tab-icon">⚙️</span><span style="font-size:13px;color:rgba(255,255,255,0.35);">Nastavení</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
