@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moje MHD Praha — Your Prague Transit Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --prague-red: #E8001D;
+      --metro-a: #00A651;
+      --metro-b: #F5A623;
+      --metro-c: #E8001D;
+      --blue-accent: #007AFF;
+      --bg-primary: #0a0a1a;
+      --bg-secondary: #1a1a2e;
+      --bg-card: rgba(255,255,255,0.04);
+      --bg-card-hover: rgba(255,255,255,0.07);
+      --border-subtle: rgba(255,255,255,0.08);
+      --border-card: rgba(255,255,255,0.12);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,0.90);
+      --text-muted: rgba(255,255,255,0.75);
+      --glass-bg: rgba(255,255,255,0.05);
+      --glass-border: rgba(255,255,255,0.10);
+      --radius-card: 24px;
+      --radius-phone: 44px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0d1117 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,10,26,0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .nav-brand-icon {
+      width: 36px; height: 36px;
+      background: var(--prague-red);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-brand-name { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
+
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 14px; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--prague-red);
+      color: #fff !important;
+      padding: 8px 20px !important;
+      border-radius: 20px;
+      font-weight: 600 !important;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 40px 80px;
+      overflow: hidden;
+    }
+
+    .hero-bg-orbs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: var(--prague-red);
+      top: -200px; left: -200px;
+      animation: orbFloat1 12s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: var(--blue-accent);
+      bottom: -100px; right: -100px;
+      animation: orbFloat2 15s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 400px; height: 400px;
+      background: var(--metro-a);
+      top: 30%; left: 60%;
+      animation: orbFloat3 10s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.05); }
+    }
+    @keyframes orbFloat2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-30px, -40px) scale(1.08); }
+    }
+    @keyframes orbFloat3 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .hero-text { display: flex; flex-direction: column; gap: 24px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,0,29,0.15);
+      border: 1px solid rgba(232,0,29,0.3);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ff8090;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -2px;
+    }
+
+    .hero-title-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #ffffff 35%, #E8001D 68%, #F5A623 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 7s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .hero-subtitle {
+      font-size: 19px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 440px;
+    }
+    .hero-subtitle strong { color: var(--text-primary); font-weight: 600; }
+
+    .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+
+    .appstore-btn-svg {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 12px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .appstore-btn-svg:hover { background: #111; transform: translateY(-2px); }
+    .appstore-icon { font-size: 28px; line-height: 1; }
+    .appstore-text { display: flex; flex-direction: column; }
+    .appstore-text span:first-child {
+      font-size: 10px; font-weight: 400; opacity: 0.7;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .appstore-text span:last-child { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+
+    .hero-stats { display: flex; gap: 32px; margin-top: 8px; }
+    .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+    .hero-stat-value { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .hero-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+    /* ── PHONE MOCKUP ── */
+    .hero-phone-wrapper {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+
+    .phone-mockup {
+      position: relative;
+      width: 280px;
+      animation: phoneFloat 6s ease-in-out infinite;
+      filter: drop-shadow(0 50px 100px rgba(0,0,0,0.9)) drop-shadow(0 0 50px rgba(232,0,29,0.2));
+    }
+
+    @keyframes phoneFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-16px); }
+    }
+
+    .phone-frame {
+      position: relative;
+      background: #0f0f0f;
+      border-radius: 52px;
+      padding: 14px;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .phone-screen {
+      border-radius: 40px;
+      overflow: hidden;
+      display: block;
+      width: 100%;
+      aspect-ratio: 9/19.5;
+      background: #000;
+    }
+    .phone-screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .phone-island {
+      position: absolute;
+      top: 22px; left: 50%; transform: translateX(-50%);
+      width: 90px; height: 28px;
+      background: #000; border-radius: 18px; z-index: 10;
+    }
+
+    .phone-side-right {
+      position: absolute; right: -4px; top: 30%;
+      width: 4px; height: 60px;
+      background: #1c1c1c; border-radius: 2px;
+    }
+
+    .phone-side-left {
+      position: absolute; left: -4px; top: 18%;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .phone-side-left span { width: 4px; background: #1c1c1c; border-radius: 2px; display: block; }
+
+    .phone-glow {
+      position: absolute; inset: -30px;
+      background: radial-gradient(ellipse at center, rgba(232,0,29,0.18) 0%, transparent 70%);
+      pointer-events: none; z-index: -1;
+    }
+
+    /* ── SECTIONS ── */
+    section { position: relative; z-index: 1; }
+    .section-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .section-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--prague-red); margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 18px; color: var(--text-secondary); line-height: 1.6; max-width: 560px;
+      text-align: center; margin: 0 auto;
+    }
+
+    /* ── LINES BANNER ── */
+    .lines-banner {
+      padding: 44px 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow: hidden;
+    }
+    .lines-scroll {
+      display: flex; gap: 12px;
+      animation: lineScroll 30s linear infinite;
+      width: max-content;
+    }
+    @keyframes lineScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .line-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 100px;
+      font-size: 13px; font-weight: 700; white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+    }
+    .line-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── FEATURES ── */
+    .features { padding: 120px 0; }
+    .features-header { text-align: center; margin-bottom: 64px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+      cursor: default;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .feature-card.visible { animation: fadeInUp 0.6s ease forwards; }
+    .feature-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-4px);
+    }
+
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    .feature-icon { font-size: 36px; margin-bottom: 16px; display: block; line-height: 1; }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .feature-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+
+    .feature-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px; font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 100px; letter-spacing: 0.3px;
+    }
+    .tag-red    { background: rgba(232,0,29,0.15);   color: #ff8090; border: 1px solid rgba(232,0,29,0.2);   }
+    .tag-green  { background: rgba(0,166,81,0.15);    color: #4ade80; border: 1px solid rgba(0,166,81,0.2);   }
+    .tag-blue   { background: rgba(0,122,255,0.15);   color: #60a5fa; border: 1px solid rgba(0,122,255,0.2);  }
+    .tag-yellow { background: rgba(245,166,35,0.15);  color: #fbbf24; border: 1px solid rgba(245,166,35,0.2); }
+    .tag-purple { background: rgba(139,92,246,0.15);  color: #c4b5fd; border: 1px solid rgba(139,92,246,0.2); }
+    .tag-gray   { background: rgba(255,255,255,0.07); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+
+    /* ── DEVICE SHOWCASE ── */
+    .showcase { padding: 100px 0 120px; overflow: hidden; }
+    .showcase-header { text-align: center; margin-bottom: 80px; }
+
+    .devices-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .device-wrapper { text-align: center; }
+
+    .device-label {
+      margin-top: 20px;
+      font-size: 14px; font-weight: 800;
+      color: #ffffff; letter-spacing: 2px;
+      text-transform: uppercase;
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 5px 16px;
+      border-radius: 100px;
+    }
+
+    /* Phone */
+    .device-phone {
+      position: relative;
+      width: 240px;
+    }
+    .device-phone .d-frame {
+      position: relative;
+      background: #0f0f0f;
+      border-radius: 52px;
+      padding: 14px;
+      border: 2px solid rgba(255,255,255,0.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .device-phone .d-screen {
+      border-radius: 40px; overflow: hidden;
+      aspect-ratio: 9/19.5; background: #000;
+    }
+    .device-phone .d-screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .device-phone .d-island {
+      position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 26px; background: #000; border-radius: 16px; z-index: 5;
+    }
+    .device-phone .d-right { position: absolute; right: -3px; top: 28%; width: 3px; height: 60px; background: #1a1a1a; border-radius: 2px; }
+    .device-phone .d-left { position: absolute; left: -3px; top: 20%; display: flex; flex-direction: column; gap: 8px; }
+    .device-phone .d-left span { width: 3px; height: 36px; background: #1a1a1a; border-radius: 2px; display: block; }
+
+    /* Tablet */
+    .device-tablet { position: relative; width: 320px; }
+    .device-tablet .d-frame {
+      background: #0f0f0f;
+      border-radius: 28px;
+      padding: 18px 14px;
+      border: 2px solid rgba(255,255,255,0.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .device-tablet .d-screen {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 3/4; background: #000;
+    }
+    .device-tablet .d-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .device-tablet .d-home { width: 60px; height: 4px; background: rgba(255,255,255,0.18); border-radius: 2px; margin: 12px auto 0; }
+
+    /* Watch */
+    .device-watch { position: relative; width: 160px; }
+    .device-watch .w-band { display: none; }
+    .device-watch .w-band-top { display: none; }
+    .device-watch .w-band-bottom { display: none; }
+    .device-watch .w-body {
+      position: relative;
+      background: #0f0f0f;
+      border-radius: 36px;
+      padding: 10px;
+      border: 2px solid rgba(255,255,255,0.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      z-index: 1;
+    }
+    .device-watch .w-screen {
+      border-radius: 26px; overflow: hidden;
+      aspect-ratio: 1/1.22; background: #000;
+    }
+    .device-watch .w-screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .device-watch .w-crown {
+      position: absolute; right: -8px; top: 28%;
+      width: 8px; height: 32px;
+      background: #1a1a1a; border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .device-watch .w-btn {
+      position: absolute; right: -8px; top: 54%;
+      width: 8px; height: 16px;
+      background: #1a1a1a; border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots { padding: 100px 0; }
+    .screenshots-header { text-align: center; margin-bottom: 64px; }
+
+    .screenshots-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 56px; align-items: center;
+    }
+
+    .screenshot-item { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+    .screenshot-info { text-align: center; }
+    .screenshot-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .screenshot-desc {
+      font-size: 15px; color: var(--text-secondary); line-height: 1.65;
+      max-width: 300px; margin: 0 auto;
+    }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 140px 40px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(232,0,29,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .cta-content { position: relative; z-index: 1; }
+    .cta-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900; letter-spacing: -2px;
+      margin-bottom: 20px; line-height: 1.05;
+    }
+    .cta-subtitle {
+      font-size: 18px; color: var(--text-secondary);
+      margin-bottom: 40px; max-width: 460px;
+      margin-left: auto; margin-right: auto; line-height: 1.6;
+    }
+    .cta-btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; font-weight: 600; color: var(--text-secondary);
+    }
+    .footer-brand-icon {
+      width: 28px; height: 28px; background: var(--prague-red);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a { text-decoration: none; color: var(--text-muted); font-size: 13px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text-secondary); }
+    .footer-copy { font-size: 12px; color: var(--text-muted); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-content { grid-template-columns: 1fr; gap: 60px; }
+      .hero-phone-wrapper { order: -1; }
+      .phone-mockup { width: 220px; }
+      .screenshots-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .section-inner { padding: 0 24px; }
+      .features { padding: 80px 0; }
+      .features-grid { grid-template-columns: 1fr; }
+      .showcase { padding: 60px 0 80px; }
+      .devices-row { gap: 28px; }
+      .device-tablet { width: 240px; }
+      .device-phone { width: 190px; }
+      .device-watch { width: 130px; }
+      footer { flex-direction: column; text-align: center; padding: 28px 24px; }
+      .hero-stats { gap: 20px; }
+      .cta { padding: 80px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-brand-icon">🚇</div>
+    <span class="nav-brand-name">Moje MHD Praha</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Funkce</a></li>
+    <li><a href="#showcase">Zařízení</a></li>
+    <li><a href="#screenshots">Screenshoty</a></li>
+    <li><a href="#download" class="nav-cta">Stáhnout</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span>🇨🇿</span>
+        <span>Praha · PID · MHD v reálném čase</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="hero-title-gradient">Moje MHD<br/>Praha</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Zjisti, <strong>kdy přijede tramvaj</strong>, naplánuj cestu a sleduj odjezdy na Dynamic Island — přímo na iPhonu, iPadu i Apple Watch.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#download" class="appstore-btn-svg">
+          <span class="appstore-icon">&#xF8FF;</span>
+          <span class="appstore-text">
+            <span>Download on the</span>
+            <span>App Store</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value">5 000+</span>
+          <span class="hero-stat-label">zastávek PID</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">10 s</span>
+          <span class="hero-stat-label">interval obnovy</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">iOS 17+</span>
+          <span class="hero-stat-label">iPhone · iPad · Watch</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-phone-wrapper">
+      <div class="phone-mockup">
+        <div class="phone-glow"></div>
+        <div class="phone-frame">
+          <div class="phone-island"></div>
+          <div class="phone-side-right"></div>
+          <div class="phone-side-left">
+            <span style="height:28px"></span>
+            <span style="height:44px"></span>
+            <span style="height:44px"></span>
+          </div>
+          <div class="phone-screen">
+            <img src="screenshots/real/iphone_home2.png" alt="Moje MHD Praha — odjezdy v reálném čase" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSPORT LINES SCROLLING BANNER -->
+<div class="lines-banner">
+  <div class="lines-scroll">
+    <div class="line-pill"><div class="line-dot" style="background:#00A651"></div>Metro A</div>
+    <div class="line-pill"><div class="line-dot" style="background:#F5A623"></div>Metro B</div>
+    <div class="line-pill"><div class="line-dot" style="background:#E8001D"></div>Metro C</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 22</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 9</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 14</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 119</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 207</div>
+    <div class="line-pill"><div class="line-dot" style="background:#555"></div>Vlak S7</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0099CC"></div>Přívoz P1</div>
+    <div class="line-pill"><div class="line-dot" style="background:#8B4513"></div>Lanovka</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Noční N1</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 100</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 1</div>
+    <!-- duplicate for seamless loop -->
+    <div class="line-pill"><div class="line-dot" style="background:#00A651"></div>Metro A</div>
+    <div class="line-pill"><div class="line-dot" style="background:#F5A623"></div>Metro B</div>
+    <div class="line-pill"><div class="line-dot" style="background:#E8001D"></div>Metro C</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 22</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 9</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 14</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 119</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 207</div>
+    <div class="line-pill"><div class="line-dot" style="background:#555"></div>Vlak S7</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0099CC"></div>Přívoz P1</div>
+    <div class="line-pill"><div class="line-dot" style="background:#8B4513"></div>Lanovka</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Noční N1</div>
+    <div class="line-pill"><div class="line-dot" style="background:#0066CC"></div>Autobus 100</div>
+    <div class="line-pill"><div class="line-dot" style="background:#BE1622"></div>Tramvaj 1</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="features-header reveal">
+      <p class="section-label">Funkce</p>
+      <h2 class="section-title">Vše o pražské MHD<br/>na jednom místě</h2>
+      <p class="section-subtitle">Přesné odjezdy, interaktivní mapa, plánování cesty i lístky — v aplikaci navržené pro denní dojíždění.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🗺️</span>
+        <div class="feature-title">Interaktivní mapa</div>
+        <div class="feature-desc">MapKit mapa s barevně odlišenými zastávkami podle typu dopravy — metro, tramvaj, autobus, vlak, přívoz, lanovka. Vozidla v reálném čase s obnovou každých 7 sekund.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">⏱️</span>
+        <div class="feature-title">Živé odjezdy</div>
+        <div class="feature-desc">Přesné odpočty z nejbližších zastávek, obnovení každých 10 sekund. Nastav si poloměr hledání od 5 m do 1 km a okno odjezdů 5–60 minut dopředu.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🔴</span>
+        <div class="feature-title">Dynamic Island</div>
+        <div class="feature-desc">Live Activity sleduje tvůj spoj přímo na Dynamic Island nebo zámkové obrazovce. Jedno klepnutí z karty odjezdu — a odjezd máš vždy na očích.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <div class="feature-title">Widgety plochy</div>
+        <div class="feature-desc">Small, Medium i Large widget s odjezdy z Domova a Práce. Widgety zámkové obrazovky. Obnova timeline každých 5 minut — nejbližší spoj vždy vidíš bez otevření aplikace.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">⌚</span>
+        <div class="feature-title">Apple Watch</div>
+        <div class="feature-desc">Odjezdy na zápěstí — sekce Připnuto, Domov a Práce. Detail přestupního spoje s tlačítkem navigace v Maps. Automatická synchronizace přes WatchConnectivity.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🎫</span>
+        <div class="feature-title">SMS lístky</div>
+        <div class="feature-desc">Jízdenka PID jedním klepnutím — odeslání SMS na 90206 se předvyplní automaticky. Na výběr 30 min (42 Kč), 90 min (55 Kč), 24 h (150 Kč) nebo 72 h (350 Kč).</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🧭</span>
+        <div class="feature-title">Plánování cesty</div>
+        <div class="feature-desc">Odkud, přes co, kam — zadáš čas odjezdu nebo příjezdu a filtruješ dopravní prostředky. Výsledky s přestupy, délkou chůze a zobrazením trasy na mapě.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">📍</span>
+        <div class="feature-title">Oblíbené zastávky</div>
+        <div class="feature-desc">Ulož si Domov, Práci, Připnuto nebo libovolné oblíbené místo. Data se sdílí s widgety i Watch přes App Group — všude vidíš to samé.</div>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-icon">🏝️</span>
+        <div class="feature-title">Live Activity</div>
+        <div class="feature-desc">Klepni na kartu odjezdu a spustí se Live Activity — odpočet do odjezdu vidíš na Dynamic Island nebo zámkové obrazovce. Notifikace 2 minuty před odjezdem.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DEVICE SHOWCASE -->
+<section class="showcase" id="showcase">
+  <div class="section-inner">
+    <div class="showcase-header reveal">
+      <p class="section-label">Zařízení</p>
+      <h2 class="section-title">Na každém Apple zařízení</h2>
+      <p class="section-subtitle">Navrženo nativně pro iPhone, iPad i Apple Watch. Přizpůsobuje se velikosti displeje a využívá to nejlepší z každé platformy.</p>
+    </div>
+
+    <div class="devices-row">
+      <!-- iPad -->
+      <div class="device-wrapper">
+        <div class="device-tablet">
+          <div class="d-frame">
+            <div class="d-screen">
+              <img src="screenshots/real/ipad_home.png" alt="Moje MHD Praha na iPadu" />
+            </div>
+            <div class="d-home"></div>
+          </div>
+        </div>
+        <div class="device-label">iPad</div>
+      </div>
+
+      <!-- iPhone -->
+      <div class="device-wrapper">
+        <div class="device-phone">
+          <div class="d-frame">
+            <div class="d-island"></div>
+            <div class="d-right"></div>
+            <div class="d-left">
+              <span style="height:28px"></span>
+              <span style="height:44px"></span>
+              <span style="height:44px"></span>
+            </div>
+            <div class="d-screen">
+              <img src="screenshots/real/iphone_home2.png" alt="Moje MHD Praha na iPhonu" />
+            </div>
+          </div>
+        </div>
+        <div class="device-label">iPhone</div>
+      </div>
+
+      <!-- Apple Watch -->
+      <div class="device-wrapper">
+        <div class="device-watch">
+          <div class="w-band w-band-top"></div>
+          <div class="w-body">
+            <div class="w-crown"></div>
+            <div class="w-btn"></div>
+            <div class="w-screen">
+              <img src="screenshots/real/watch_journey_en.png" alt="Moje MHD Praha na Apple Watch" />
+            </div>
+          </div>
+          <div class="w-band w-band-bottom"></div>
+        </div>
+        <div class="device-label">Apple Watch</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS SECTION -->
+<section class="screenshots" id="screenshots">
+  <div class="section-inner">
+    <div class="screenshots-header reveal">
+      <p class="section-label">Screenshoty</p>
+      <h2 class="section-title">Přehledné a intuitivní</h2>
+      <p class="section-subtitle">Každá obrazovka navržena pro rychlé čtení v pohybu — ve tmě, na slunci, v metru.</p>
+    </div>
+
+    <div class="screenshots-grid">
+      <!-- Settings -->
+      <div class="screenshot-item reveal">
+        <div class="device-phone" style="width:210px;">
+          <div class="d-frame">
+            <div class="d-island"></div>
+            <div class="d-right"></div>
+            <div class="d-left">
+              <span style="height:28px"></span>
+              <span style="height:44px"></span>
+              <span style="height:44px"></span>
+            </div>
+            <div class="d-screen">
+              <img src="screenshots/real/iphone_settings.png" alt="Nastavení Moje MHD Praha" />
+            </div>
+          </div>
+        </div>
+        <div class="screenshot-info">
+          <div class="screenshot-title">Nastavení</div>
+          <div class="screenshot-desc">Ulož si Domov a Práci, nastav poloměr hledání, okno odjezdů a preferovaný styl mapy — Standard, Satellite nebo 3D.</div>
+        </div>
+      </div>
+
+      <!-- Tickets -->
+      <div class="screenshot-item reveal" style="transition-delay:0.15s">
+        <div class="device-phone" style="width:210px;">
+          <div class="d-frame">
+            <div class="d-island"></div>
+            <div class="d-right"></div>
+            <div class="d-left">
+              <span style="height:28px"></span>
+              <span style="height:44px"></span>
+              <span style="height:44px"></span>
+            </div>
+            <div class="d-screen">
+              <img src="screenshots/real/iphone_tickets.png" alt="SMS lístky Moje MHD Praha" />
+            </div>
+          </div>
+        </div>
+        <div class="screenshot-info">
+          <div class="screenshot-title">SMS lístky</div>
+          <div class="screenshot-desc">Kup si jízdenku PID jedním klepnutím. SMS na číslo 90206 se předvyplní automaticky — stačí potvrdit odeslání.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="download">
+  <div class="cta-bg"></div>
+  <div class="cta-content reveal">
+    <p class="section-label" style="display:block;">Stáhnout zdarma</p>
+    <h2 class="cta-title">Jeď přesně.<br/>Přesně teď.</h2>
+    <p class="cta-subtitle">Moje MHD Praha je ke stažení zdarma na App Store. Žádné reklamy, žádné předplatné — čistá aplikace pro každodenní dojíždění.</p>
+    <div class="cta-btn-group">
+      <a href="#" class="appstore-btn-svg" style="font-size:15px; padding:14px 28px; border-radius:16px;">
+        <span class="appstore-icon">&#xF8FF;</span>
+        <span class="appstore-text">
+          <span>Download on the</span>
+          <span>App Store</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-brand-icon">🚇</div>
+    <span>Moje MHD Praha</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Soukromí</a></li>
+    <li><a href="#">Podpora</a></li>
+    <li><a href="#">Kontakt</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 Moje MHD Praha &nbsp;·&nbsp; Data: Golemio · PID · OpenStreetMap</span>
+</footer>
+
+<script>
+  // Intersection Observer — reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Feature cards stagger
+  const cardIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.feature-card').forEach((card, i) => {
+          setTimeout(() => card.classList.add('visible'), i * 75);
+        });
+        cardIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.04 });
+
+  const fgrid = document.querySelector('.features-grid');
+  if (fgrid) cardIO.observe(fgrid);
+</script>
+</body>
+</html>
